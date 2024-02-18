@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "CardTypes.h"
+
 namespace fs = std::filesystem;
 
 inline std::string getDefaultPath()
@@ -30,12 +32,12 @@ inline std::ifstream getCsvFile(const std::string& filePath)
 	return file;
 }
 
-inline std::vector<std::pair<std::string, std::string>> extractCards(std::ifstream file)
+inline std::vector<QuizCard> extractCards(std::ifstream file)
 {
-	std::vector<std::pair<std::string, std::string>> cards;
+	std::vector<QuizCard> cards;
 	for (auto& row : CSVRange(file))
 	{
-		cards.emplace_back(row[0], row[1]);
+		cards.emplace_back(std::string(row[0]), std::string(row[1]));
 	}
 
 	return cards;

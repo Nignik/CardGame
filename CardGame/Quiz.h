@@ -1,25 +1,25 @@
 #pragma once
 
-#include <memory>
-
-#include "QuizType.h"
+#include <random>
 #include <vector>
 #include <string>
-#include <utility>
+#include <functional>
+#include <CardTypes.h>
 
 class Quiz
 {
 public:
+	Quiz(std::vector<QuizCard> deck, std::function<void(std::vector<QuizCard>&)> shuffleFunction);
+
 	[[nodiscard]] std::string& GetCurrentQuestion() const;
 	[[nodiscard]] std::string& GetCurrentAnswer() const;
 
 	void NextCard();
 	void ShuffleDeck();
 
-	Quiz(std::unique_ptr<QuizType> type, std::vector<std::pair<std::string, std::string>> cards);
-
 private:
-	std::unique_ptr<QuizType> m_Type;
-	std::vector<std::pair<std::string, std::string>> m_Cards;
-	std::vector<std::pair<std::string, std::string>>::iterator m_CurrentCard;
+	std::function<void(std::vector<QuizCard>&)> m_Shuffle;
+
+	std::vector<QuizCard> m_Deck;
+	std::vector<QuizCard>::iterator m_CurrentCard;
 };

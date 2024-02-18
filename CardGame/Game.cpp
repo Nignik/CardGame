@@ -1,6 +1,7 @@
 #include "Game.h"
 
-#include "BasicQuiz.h"
+#include <Shuffles.h>
+
 
 void Game::Init()
 {
@@ -17,10 +18,8 @@ void Game::Init()
 
 	const auto cards = extractCards(getCsvFile(filePath));
 
-	BasicQuiz type;
-	m_Quiz = std::make_unique<Quiz>(std::make_unique<BasicQuiz>(), cards);
-
-	m_Quiz->ShuffleDeck();
+	std::function passFunction = shuffleRandom<QuizCard>;
+	m_Quiz = std::make_unique<Quiz>(cards, passFunction);
 }
 
 void Game::TakeUserAnswer()

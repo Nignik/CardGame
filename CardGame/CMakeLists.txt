@@ -2,7 +2,7 @@
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 
-add_executable (CardGame "QuizApp.cpp" "QuizApp.h" "Quiz.h" "BasicQuiz.h" "BasicQuiz.cpp" "Quiz.cpp" "QuizType.h"   "UserInterface.h" "UserInterface.cpp" "../includes/FilesHandler.h" "Game.h" "Game.cpp" "Card.h")
+add_executable (CardGame "QuizApp.cpp" "QuizApp.h" "Quiz.h"   "Quiz.cpp"    "UserInterface.h" "UserInterface.cpp" "../includes/FilesHandler.h" "Game.h" "Game.cpp"    )
 
 include_directories(${CMAKE_SOURCE_DIR}/includes)
 
