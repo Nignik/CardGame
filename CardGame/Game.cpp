@@ -1,56 +1,48 @@
 #include "Game.h"
 
+#include <iostream>
 #include <Shuffles.h>
 
+#include "GameInterface.h"
 
-void Game::Init()
+void Game::Init(const std::vector<QuizCard>& cards)
 {
-	std::string filePath;
-	std::cout << "Quiz file name: ";
-	std::getline(std::cin, filePath);
-
-	while (!getCsvFile(filePath))
-	{
-		std::getline(std::cin, filePath);
-	}
-
-	m_UserInterface->ClearConsole();
-
-	const auto cards = extractCards(getCsvFile(filePath));
+	m_IsGameOn = true;
 
 	std::function passFunction = shuffleRandom<QuizCard>;
 	m_Quiz = std::make_unique<Quiz>(cards, passFunction);
-}
-
-void Game::TakeUserAnswer()
-{
-	std::getline(std::cin, m_UserAnswer);
-}
-
-void Game::ProcessUserAnswer()
-{
-	if (m_UserAnswer == "quit")
-	{
-		m_Is_GameOn = false;
-	}
-	else if (m_UserAnswer == m_Quiz->GetCurrentAnswer())
-	{
-		m_UserInterface->ShowResult(m_Quiz->GetCurrentAnswer(), true);
-	}
-	else
-	{
-		m_UserInterface->ShowResult(m_Quiz->GetCurrentAnswer(), false);
-	}
+	std::cout << "Initialized" << '\n';
 }
 
 void Game::Play()
 {
-	while (m_Is_GameOn)
+	while (IsGameOn())
 	{
-		m_UserInterface->ShowQuestion(m_Quiz->GetCurrentQuestion());
-		TakeUserAnswer();
+		GI::DisplayQuestion(m_Quiz->GetCurrentQuestion());
+
+		std::cin >> m_UserAnswer;
 		ProcessUserAnswer();
-		m_Quiz->NextCard();
+	}
+
+	std::cout << "Play stopped" << '\n';
+}
+
+void Game::End()
+{
+	std::lock_guard<std::mutex> lock(m_Mutex);
+	m_IsGameOn = false;
+	std::cout << "Ended" << '\n';
+}
+
+void Game::ProcessUserAnswer() const
+{
+	if (m_UserAnswer == m_Quiz->GetCurrentAnswer())
+	{
+		GI::DisplayResult(m_Quiz->GetCurrentAnswer(), true);
+	}
+	else
+	{
+		GI::DisplayResult(m_Quiz->GetCurrentAnswer(), false);
 	}
 }
 

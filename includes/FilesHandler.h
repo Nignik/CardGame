@@ -6,6 +6,7 @@
 #include <fstream>
 #include <filesystem>
 #include <iostream>
+#include <imgui.h>
 
 #include "CardTypes.h"
 
@@ -15,7 +16,12 @@ inline std::string getDefaultPath()
 {
 	char cwd[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, cwd);
+
+#ifndef NDEBUG
+	std::string folderPath = std::string(cwd) + "/../../../../quizzes/";
+#else
 	std::string folderPath = std::string(cwd) + "/../quizzes/";
+#endif
 
 	return folderPath;
 }

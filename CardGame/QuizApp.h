@@ -1,8 +1,24 @@
-﻿// QuizApp.h : Include file for standard system include files,
-// or project specific include files.
+﻿#pragma once
 
-#pragma once
+#include <GLFW/glfw3.h>
+#include "Game.h"
 
-#include <iostream>
+class QuizApp
+{
+public:
+	QuizApp();
+	~QuizApp();
 
-// TODO: Reference additional headers your program requires here.
+	void Run();
+
+private:
+	GLFWwindow* m_Window;
+	Game m_Game;
+	std::thread m_GameThread;
+
+	void InitWindow();
+	void InitImGui() const;
+	void MainLoop();
+	void Cleanup() const;
+};
+
