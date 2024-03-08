@@ -8,6 +8,12 @@
 #include "UserInterface.h"
 #include <FilesHandler.h>
 #include <iostream>
+#include <queue>
+
+#include "Game.h"
+#include "SharedResources.h"
+
+SharedResources sharedResources;
 
 QuizApp::QuizApp() : m_Window(nullptr) {}
 
@@ -48,12 +54,24 @@ void QuizApp::InitImGui() const
 	ImGui_ImplOpenGL3_Init("#version 130");
 }
 
+void QuizApp::InputHandler()
+{
+	while (m_Window)
+	{
+		std::string input;
+		std::getline(std::cin, input);
+
+		sharedResources.SetInput(input);
+	}
+}
+
 void QuizApp::MainLoop()
 {
+	Game game(&sharedResources);
+	std::thread inputThread(&QuizApp::InputHandler, this);
+
 	std::string currentPath = "C:/DEV/CppStuff/CardGame/quizzes";
 	std::string selectedFile;
-
-	Game game;
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
@@ -94,6 +112,10 @@ void QuizApp::MainLoop()
 	if (m_GameThread.joinable())
 	{
 		m_GameThread.join();
+	}
+	if (inputThread.joinable())
+	{
+		inputThread.join();
 	}
 }
 

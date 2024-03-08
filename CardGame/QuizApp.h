@@ -13,11 +13,11 @@ public:
 
 private:
 	GLFWwindow* m_Window;
-	Game m_Game;
 	std::thread m_GameThread;
 
 	void InitWindow();
 	void InitImGui() const;
+	void InputHandler();
 	void MainLoop();
 	void Cleanup() const;
 };

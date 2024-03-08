@@ -5,33 +5,47 @@
 
 #include "GameInterface.h"
 
+Game::Game(SharedResources* sharedResources) : m_SharedResources(sharedResources)
+{
+}
+
 void Game::Init(const std::vector<QuizCard>& cards)
 {
 	m_IsGameOn = true;
 
 	std::function passFunction = shuffleRandom<QuizCard>;
 	m_Quiz = std::make_unique<Quiz>(cards, passFunction);
-	std::cout << "Initialized" << '\n';
 }
 
 void Game::Play()
 {
-	while (IsGameOn())
-	{
-		GI::DisplayQuestion(m_Quiz->GetCurrentQuestion());
+	GI::DisplayQuestion(m_Quiz->GetCurrentQuestion());
 
-		std::cin >> m_UserAnswer;
-		ProcessUserAnswer();
+	while (m_IsGameOn)
+	{
+		if (m_SharedResources->IsInputAvailable())
+		{
+			m_UserAnswer = m_SharedResources->GetInputNonBlocking();
+			if (!m_UserAnswer.empty())
+			{
+				ProcessUserAnswer();
+
+				m_Quiz->NextCard();
+				GI::DisplayQuestion(m_Quiz->GetCurrentQuestion());
+			}
+		}
+
+		m_InputReady = false;
 	}
 
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	std::cout << "Play stopped" << '\n';
+	//GI::ClearConsole();
 }
 
 void Game::End()
 {
-	std::lock_guard<std::mutex> lock(m_Mutex);
 	m_IsGameOn = false;
-	std::cout << "Ended" << '\n';
 }
 
 void Game::ProcessUserAnswer() const
