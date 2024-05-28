@@ -12,6 +12,7 @@ public:
 	Game(SharedResources* sharedResources);
 	void Init(const std::vector<QuizCard>& cards);
 	void Play();
+	void Swap();
 	void End();
 	void ProcessUserAnswer() const;
 

@@ -40,6 +40,14 @@ namespace UI
 		}
 		ImGui::End();
 	}
+
+	void RenderSwapButton(std::function<void()>& swapFunction)
+	{
+		if (ImGui::Button("Swap questions with answers"))
+		{
+			swapFunction();
+		}
+	}
 }
 
 

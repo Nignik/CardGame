@@ -52,6 +52,7 @@ void QuizApp::InitImGui() const
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
+
 }
 
 void QuizApp::InputHandler()
@@ -70,9 +71,12 @@ void QuizApp::MainLoop()
 	Game game(&sharedResources);
 	std::thread inputThread(&QuizApp::InputHandler, this);
 
-	std::string currentPath = "C:/DEV/CppStuff/CardGame/quizzes";
+	std::string currentPath = "C:/";
 	std::string selectedFile;
 
+	std::function<void()> swap = std::bind(&Game::Swap, &game);
+
+	bool initialised = false;
 	while (!glfwWindowShouldClose(m_Window))
 	{
 		glfwPollEvents();
@@ -82,6 +86,11 @@ void QuizApp::MainLoop()
 
 		UI::RenderFileSelector("File selector", currentPath, selectedFile);
 
+		if (initialised)
+		{
+			UI::RenderSwapButton(swap);
+		}
+		
 		if (!selectedFile.empty())
 		{
 			if (m_GameThread.joinable())
@@ -91,6 +100,7 @@ void QuizApp::MainLoop()
 			}
 
 			game.Init(extractCards(getCsvFile(selectedFile)));
+			initialised = true;
 			m_GameThread = std::thread(&Game::Play, &game);
 
 			std::cout << "Game Started!!!" << '\n';
@@ -110,13 +120,10 @@ void QuizApp::MainLoop()
 	}
 
 	if (m_GameThread.joinable())
-	{
 		m_GameThread.join();
-	}
+
 	if (inputThread.joinable())
-	{
 		inputThread.join();
-	}
 }
 
 void QuizApp::Cleanup() const

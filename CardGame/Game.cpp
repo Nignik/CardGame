@@ -43,6 +43,11 @@ void Game::Play()
 	//GI::ClearConsole();
 }
 
+void Game::Swap()
+{
+	m_Quiz->Swap();
+}
+
 void Game::End()
 {
 	m_IsGameOn = false;

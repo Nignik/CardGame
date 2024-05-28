@@ -4,8 +4,8 @@
 
 struct QuizCard
 {
-	std::string answer;
 	std::string question;
+	std::string answer;
 
-	QuizCard(std::string answer, std::string question) : answer(std::move(answer)), question(std::move(question)) {}
+	QuizCard(std::string question, std::string answer) : question(std::move(question)), answer(std::move(answer)) {}
 };

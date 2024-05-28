@@ -7,6 +7,7 @@ int main()
 	try
 	{
 		QuizApp app;
+		std::cout << "App started" << '\n';
 		app.Run();
 	}
 	catch (const std::exception& e)

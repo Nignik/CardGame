@@ -16,6 +16,7 @@ public:
 
 	void NextCard();
 	void ShuffleDeck();
+	void Swap();
 
 private:
 	std::function<void(std::vector<QuizCard>&)> m_Shuffle;
